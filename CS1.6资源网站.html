@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>亡魂的CS1.6资源整合网站</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F172A',
+                        secondary: '#1E293B',
+                        accent: '#FF4500',
+                        'cs-green': '#00FF00',
+                        'cs-blue': '#0000FF',
+                        'cs-red': '#FF0000',
+                        'cs-yellow': '#FFFF00'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        heading: ['Rajdhani', 'sans-serif']
+                    },
+                    backgroundImage: {
+                        'cs-pattern': "url('https://p26-doubao-search-sign.byteimg.com/labis/dc6693630c18c3d5c3e3352f985cf165~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=uZ2PPFnxDh5WS9ce0YzfnI2SKt0%3D')",
+                        'cs-bg': "linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://p26-doubao-search-sign.byteimg.com/labis/3fc33c88f377f62b43fbb1aa4c2c9ecd~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=qEApoLeLmH%2BsOE65Rs5g1d%2FxIAk%3D')"
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            }
+            .text-shadow-lg {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
+            }
+            .bg-glass {
+                background: rgba(30, 41, 59, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .border-glow {
+                box-shadow: 0 0 5px theme('colors.cs-green'), 0 0 10px theme('colors.cs-green');
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            }
+            .cs-scrollbar::-webkit-scrollbar {
+                width: 8px;
+            }
+            .cs-scrollbar::-webkit-scrollbar-track {
+                background: theme('colors.secondary');
+            }
+            .cs-scrollbar::-webkit-scrollbar-thumb {
+                background: theme('colors.accent');
+                border-radius: 4px;
+            }
+            .cs-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: theme('colors.cs-red');
+            }
+        }
+        
+        body {
+            background-color: theme('colors.primary');
+            color: white;
+            font-family: theme('fontFamily.sans');
+        }
+        
+        .hero-section {
+            background-image: theme('backgroundImage.cs-bg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .category-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .category-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .category-card:hover .category-overlay {
+            opacity: 1;
+        }
+        
+        .category-overlay {
+            opacity: 0;
+            transition: all 0.3s ease;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+        
+        .resource-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .resource-card:hover {
+            border-color: theme('colors.cs-green');
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px theme('colors.cs-green');
+        }
+        
+        .rating-stars i {
+            color: theme('colors.cs-yellow');
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: theme('colors.cs-green');
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .active-nav::after {
+            width: 100%;
+        }
+        
+        .search-box {
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 0 10px theme('colors.cs-blue');
+        }
+        
+        .btn-primary {
+            background-color: theme('colors.accent');
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e03e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.5);
+        }
+        
+        .btn-secondary {
+            background-color: theme('colors.cs-blue');
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0000cc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 255, 0.5);
+        }
+        
+        .btn-success {
+            background-color: theme('colors.cs-green');
+            color: black;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            background-color: #00cc00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .badge {
+            transition: all 0.3s ease;
+        }
+        
+        .badge:hover {
+            transform: scale(1.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-content {
+            margin: 5% auto;
+            width: 80%;
+            max-width: 900px;
+            animation: modalFadeIn 0.5s;
+        }
+        
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: theme('colors.accent');
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="cs-scrollbar">
+    <!-- 导航栏 -->
+    <nav class="bg-glass sticky top-0 z-50 border-b border-gray-800">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-4">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4a2f01772f304d75b57f51f907f435f5~tplv-a9rns2rl98-image.image?rcl=20251022230919643B13DEF809A360B4E9&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763737788&x-signature=EtBeKrv0cxgZLCt3L8HmfBrXU8k%3D" alt="亡魂CS1.6资源站" class="h-12 w-auto">
+                    <h1 class="text-2xl font-bold text-cs-green hidden md:block">亡魂的CS1.6资源整合网站</h1>
+                </div>
+                
+                <!-- 导航链接 - 桌面版 -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-link active-nav text-white hover:text-cs-green font-medium">首页</a>
+                    <a href="#categories" class="nav-link text-white hover:text-cs-green font-medium">资源分类</a>
+                    <a href="#popular" class="nav-link text-white hover:text-cs-green font-medium">热门资源</a>
+                    <a href="#new" class="nav-link text-white hover:text-cs-green font-medium">最新上传</a>
+                    <a href="#about" class="nav-link text-white hover:text-cs-green font-medium">关于我们</a>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div class="hidden md:flex items-center">
+                    <div class="search-box relative">
+                        <input type="text" placeholder="搜索资源..." class="bg-secondary text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-cs-blue w-48 lg:w-64">
+                        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-cs-green">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                    <button class="ml-4 btn-primary px-4 py-2 rounded-full font-medium">
+                        <i class="fa fa-user-circle mr-1"></i> 登录
+                    </button>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-white focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="#" class="text-white hover:text-cs-green font-medium py-2 border-b border-gray-800">首页</a>
+                    <a href="#categories" class="text-white hover:text-cs-green font-medium py-2 border-b border-gray-800">资源分类</a>
+                    <a href="#popular" class="text-white hover:text-cs-green font-medium py-2 border-b border-gray-800">热门资源</a>
+                    <a href="#new" class="text-white hover:text-cs-green font-medium py-2 border-b border-gray-800">最新上传</a>
+                    <a href="#about" class="text-white hover:text-cs-green font-medium py-2 border-b border-gray-800">关于我们</a>
+                    <div class="search-box relative mt-3">
+                        <input type="text" placeholder="搜索资源..." class="bg-secondary text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-cs-blue w-full">
+                        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-cs-green">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                    <button class="btn-primary px-4 py-2 rounded-full font-medium mt-3">
+                        <i class="fa fa-user-circle mr-1"></i> 登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <section class="hero-section min-h-screen flex items-center justify-center relative">
+        <div class="container mx-auto px-4 py-20 text-center" data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 text-shadow-lg">
+                <span class="text-cs-green">亡魂</span>的CS1.6资源整合网站
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto text-shadow">
+                一站式获取CS1.6地图、模型、插件、皮肤等资源，让你的游戏体验更加丰富多彩
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <button class="btn-primary px-8 py-3 rounded-full font-bold text-lg">
+                    <i class="fa fa-download mr-2"></i> 开始下载
+                </button>
+                <button class="btn-secondary px-8 py-3 rounded-full font-bold text-lg">
+                    <i class="fa fa-info-circle mr-2"></i> 了解更多
+                </button>
+            </div>
+            
+            <!-- 统计数据 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
+                <div class="bg-glass p-6 rounded-lg border border-gray-800">
+                    <h3 class="text-3xl font-bold text-cs-green">10,000+</h3>
+                    <p class="text-gray-400">资源总数</p>
+                </div>
+                <div class="bg-glass p-6 rounded-lg border border-gray-800">
+                    <h3 class="text-3xl font-bold text-cs-blue">500,000+</h3>
+                    <p class="text-gray-400">总下载量</p>
+                </div>
+                <div class="bg-glass p-6 rounded-lg border border-gray-800">
+                    <h3 class="text-3xl font-bold text-cs-yellow">100,000+</h3>
+                    <p class="text-gray-400">注册用户</p>
+                </div>
+                <div class="bg-glass p-6 rounded-lg border border-gray-800">
+                    <h3 class="text-3xl font-bold text-cs-red">5+</h3>
+                    <p class="text-gray-400">资源分类</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 向下滚动指示 -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#categories" class="text-white hover:text-cs-green">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 资源分类 -->
+    <section id="categories" class="py-20 bg-primary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">资源分类</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">浏览我们丰富的CS1.6资源分类，找到你需要的一切</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 地图分类 -->
+                <div class="category-card rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://p11-doubao-search-sign.byteimg.com/labis/90ec8ad3446e0db66b99fa618670e2e7~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=A0u1HT1hXyK126NKgBicW%2B44acM%3D" alt="地图" class="w-full h-64 object-cover">
+                    <div class="category-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h3 class="text-2xl font-bold mb-2">地图</h3>
+                        <p class="text-gray-300 mb-4">下载经典和自定义地图，扩展你的游戏体验</p>
+                        <div class="flex justify-between items-center">
+                            <span class="badge bg-cs-blue px-3 py-1 rounded-full text-sm">1,200+ 资源</span>
+                            <button class="btn-primary px-4 py-2 rounded-full text-sm">浏览</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 武器分类 -->
+                <div class="category-card rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://p11-doubao-search-sign.byteimg.com/labis/91da91341920588ebd37505ee7bfdb29~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=HNBqiOq6xC9C5JPexrO6JYlfVcA%3D" alt="武器" class="w-full h-64 object-cover">
+                    <div class="category-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h3 class="text-2xl font-bold mb-2">武器</h3>
+                        <p class="text-gray-300 mb-4">获取各种武器皮肤和模型，让你的装备更加独特</p>
+                        <div class="flex justify-between items-center">
+                            <span class="badge bg-cs-red px-3 py-1 rounded-full text-sm">850+ 资源</span>
+                            <button class="btn-primary px-4 py-2 rounded-full text-sm">浏览</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 角色分类 -->
+                <div class="category-card rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/labis/51cae5ee15c835b2f1eb56f755429779~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697772&x-signature=4I3wQjVdk4tDgsHu7T4k0XHrdqE%3D" alt="角色" class="w-full h-64 object-cover">
+                    <div class="category-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h3 class="text-2xl font-bold mb-2">角色</h3>
+                        <p class="text-gray-300 mb-4">更换你的游戏角色模型，展现个性</p>
+                        <div class="flex justify-between items-center">
+                            <span class="badge bg-cs-green px-3 py-1 rounded-full text-sm">620+ 资源</span>
+                            <button class="btn-primary px-4 py-2 rounded-full text-sm">浏览</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件分类 -->
+                <div class="category-card rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/0bd098105e7444a0a92ad13ae5bad52e~tplv-a9rns2rl98-image.image?rcl=20251022230919643B13DEF809A360B4E9&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763737793&x-signature=XWko7EgeEHAFUksmiOAiPOWAQI4%3D" alt="插件" class="w-full h-64 object-cover">
+                    <div class="category-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h3 class="text-2xl font-bold mb-2">插件</h3>
+                        <p class="text-gray-300 mb-4">增强游戏功能的插件和工具</p>
+                        <div class="flex justify-between items-center">
+                            <span class="badge bg-cs-yellow px-3 py-1 rounded-full text-sm">480+ 资源</span>
+                            <button class="btn-primary px-4 py-2 rounded-full text-sm">浏览</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 音效分类 -->
+                <div class="category-card rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="500">
+                    <img src="https://p26-doubao-search-sign.byteimg.com/labis/952ee53e42319d39fb31404dcd6e8e69~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=xcC4%2B%2FgE30G7LqclrXXaeztwzS4%3D" alt="音效" class="w-full h-64 object-cover">
+                    <div class="category-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h3 class="text-2xl font-bold mb-2">音效</h3>
+                        <p class="text-gray-300 mb-4">自定义游戏音效，提升沉浸感</p>
+                        <div class="flex justify-between items-center">
+                            <span class="badge bg-purple-500 px-3 py-1 rounded-full text-sm">350+ 资源</span>
+                            <button class="btn-primary px-4 py-2 rounded-full text-sm">浏览</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工具分类 -->
+                <div class="category-card rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="600">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/labis/6586ae2a21a265c9ac8d9164d118b213~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=c7b%2B11hJn3mWi4CivI%2FJTUGmOmY%3D" alt="工具" class="w-full h-64 object-cover">
+                    <div class="category-overlay absolute inset-0 flex flex-col justify-end p-6">
+                        <h3 class="text-2xl font-bold mb-2">工具</h3>
+                        <p class="text-gray-300 mb-4">地图编辑器、模型制作工具等</p>
+                        <div class="flex justify-between items-center">
+                            <span class="badge bg-gray-500 px-3 py-1 rounded-full text-sm">280+ 资源</span>
+                            <button class="btn-primary px-4 py-2 rounded-full text-sm">浏览</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门资源 -->
+    <section id="popular" class="py-20 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold" data-aos="fade-right">热门资源</h2>
+                <div class="flex space-x-2" data-aos="fade-left">
+                    <button class="filter-btn active px-4 py-2 rounded-full bg-cs-green text-black font-medium">全部</button>
+                    <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 hover:bg-cs-green hover:text-black transition-all font-medium">地图</button>
+                    <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 hover:bg-cs-green hover:text-black transition-all font-medium">武器</button>
+                    <button class="filter-btn px-4 py-2 rounded-full bg-gray-700 hover:bg-cs-green hover:text-black transition-all font-medium">角色</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- 资源卡片 1 -->
+                <div class="resource-card bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/44843b9759f11aa8461a242e9e39d33c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=gPyw7uMF%2F65s92S0P9EHFWQQcMo%3D" alt="镇妖宝塔地图" class="w-full h-48 object-cover">
+                        <span class="absolute top-2 right-2 bg-cs-blue px-2 py-1 rounded text-xs font-medium">地图</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold mb-2">镇妖宝塔-灵山古寺</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="rating-stars mr-2">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                            </div>
+                            <span class="text-gray-400 text-sm">4.5 (1,245 评价)</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">国风僵尸地图，融合东方元素与恐怖氛围，适合僵尸服使用。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 25,678</span>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片 2 -->
+                <div class="resource-card bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/ca96fee9e909b69271316a9c49ec5350~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=Aml46ZYQcM0d3CWwltXbmkfj6CY%3D" alt="CSGO风格武器包" class="w-full h-48 object-cover">
+                        <span class="absolute top-2 right-2 bg-cs-red px-2 py-1 rounded text-xs font-medium">武器</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold mb-2">CSGO风格武器包</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="rating-stars mr-2">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <span class="text-gray-400 text-sm">4.0 (987 评价)</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">将CSGO的武器模型和纹理移植到CS1.6，让经典游戏焕发新生。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 19,432</span>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片 3 -->
+                <div class="resource-card bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <div class="relative">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/cf5745442649b636dc7304f00565ca72~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=e9oZUWQPK%2FDJF4YNBkkk94ODUNA%3D" alt="性感魔女角色" class="w-full h-48 object-cover">
+                        <span class="absolute top-2 right-2 bg-cs-green px-2 py-1 rounded text-xs font-medium">角色</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold mb-2">性感魔女Hestia</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="rating-stars mr-2">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                            </div>
+                            <span class="text-gray-400 text-sm">4.7 (1,562 评价)</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">自制角色MOD，性感魔女Hestia替换原有角色模型，细节精美。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 32,145</span>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片 4 -->
+                <div class="resource-card bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="400">
+                    <div class="relative">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/19baf9ae7bedb19811f8fbbae8ebfece~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=DNDESB%2F03n%2B%2F2ZNhxTQCXHBg3Jk%3D" alt="滑坡竞技场" class="w-full h-48 object-cover">
+                        <span class="absolute top-2 right-2 bg-cs-blue px-2 py-1 rounded text-xs font-medium">地图</span>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold mb-2">滑坡竞技场</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="rating-stars mr-2">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <span class="text-gray-400 text-sm">3.2 (756 评价)</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">趣味滑坡地图，玩家可以在滑坡上进行快速移动和战斗。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 12,893</span>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-secondary px-6 py-3 rounded-full font-medium">
+                    查看更多热门资源 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最新上传 -->
+    <section id="new" class="py-20 bg-primary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">最新上传</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">发现社区最新分享的CS1.6资源</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 最新资源 1 -->
+                <div class="bg-secondary rounded-lg overflow-hidden flex" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-1/3">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/a7b0593095e1dae88b8e4e2f85010391~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=1%2F21NDKyNQpMg%2BCJiw8tA9HneN8%3D" alt="子弹袋武器" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-2/3 p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">子弹袋武器包</h3>
+                            <span class="bg-cs-red px-2 py-1 rounded text-xs font-medium">武器</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">CS1.6僵尸服专用子弹袋武器包，包含多种实用武器，适合生存模式使用。</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <span class="text-gray-400 text-sm mr-4"><i class="fa fa-calendar mr-1"></i> 2025-07-18</span>
+                                <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 3,456</span>
+                            </div>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最新资源 2 -->
+                <div class="bg-secondary rounded-lg overflow-hidden flex" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-1/3">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/7dddffe21d0a5f54555adc4de42b72f3~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697772&x-signature=73Wonb2nKckYAriiqq7%2FgRBm%2F74%3D" alt="公主裙安娜" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-2/3 p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">公主裙安娜角色</h3>
+                            <span class="bg-cs-green px-2 py-1 rounded text-xs font-medium">角色</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">CSOL2公主裙安娜角色模型移植，精致的公主裙设计，替换CT阵营角色。</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <span class="text-gray-400 text-sm mr-4"><i class="fa fa-calendar mr-1"></i> 2025-07-15</span>
+                                <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 5,123</span>
+                            </div>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最新资源 3 -->
+                <div class="bg-secondary rounded-lg overflow-hidden flex" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-1/3">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/19baf9ae7bedb19811f8fbbae8ebfece~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=DNDESB%2F03n%2B%2F2ZNhxTQCXHBg3Jk%3D" alt="滑坡竞技场" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-2/3 p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">滑坡竞技场V2</h3>
+                            <span class="bg-cs-blue px-2 py-1 rounded text-xs font-medium">地图</span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-3">滑坡竞技场升级版，增加了更多滑坡和障碍物，提升游戏趣味性。</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <span class="text-gray-400 text-sm mr-4"><i class="fa fa-calendar mr-1"></i> 2025-07-10</span>
+                                <span class="text-gray-400 text-sm"><i class="fa fa-download mr-1"></i> 2,876</span>
+                            </div>
+                            <button class="view-resource btn-success px-3 py-1 rounded text-sm font-medium">查看</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-secondary px-6 py-3 rounded-full font-medium">
+                    查看更多最新资源 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 资源推荐 -->
+    <section class="py-20 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">为你推荐</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">基于你的浏览历史，我们为你推荐以下资源</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- 推荐资源 1 -->
+                <div class="bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://p11-doubao-search-sign.byteimg.com/labis/91da91341920588ebd37505ee7bfdb29~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=HNBqiOq6xC9C5JPexrO6JYlfVcA%3D" alt="AWP皮肤" class="w-full h-40 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-bold mb-1">CSGO风格AWP</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400 text-xs"><i class="fa fa-download mr-1"></i> 15,234</span>
+                            <button class="text-cs-green hover:text-cs-blue transition-colors">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 推荐资源 2 -->
+                <div class="bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/labis/44843b9759f11aa8461a242e9e39d33c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=gPyw7uMF%2F65s92S0P9EHFWQQcMo%3D" alt="国风地图" class="w-full h-40 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-bold mb-1">国风僵尸地图合集</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400 text-xs"><i class="fa fa-download mr-1"></i> 9,876</span>
+                            <button class="text-cs-green hover:text-cs-blue transition-colors">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 推荐资源 3 -->
+                <div class="bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/labis/cf5745442649b636dc7304f00565ca72~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=e9oZUWQPK%2FDJF4YNBkkk94ODUNA%3D" alt="角色模型" class="w-full h-40 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-bold mb-1">性感角色模型合集</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400 text-xs"><i class="fa fa-download mr-1"></i> 22,145</span>
+                            <button class="text-cs-green hover:text-cs-blue transition-colors">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 推荐资源 4 -->
+                <div class="bg-primary rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="400">
+                    <img src="https://p11-doubao-search-sign.byteimg.com/labis/a7b0593095e1dae88b8e4e2f85010391~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=1%2F21NDKyNQpMg%2BCJiw8tA9HneN8%3D" alt="僵尸武器" class="w-full h-40 object-cover">
+                    <div class="p-3">
+                        <h3 class="font-bold mb-1">僵尸服专用武器包</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400 text-xs"><i class="fa fa-download mr-1"></i> 17,543</span>
+                            <button class="text-cs-green hover:text-cs-blue transition-colors">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about" class="py-20 bg-primary">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">关于我们</h2>
+                    <p class="text-gray-300 mb-6">
+                        "亡魂的CS1.6资源整合网站"成立于2010年，是国内最专业的CS1.6资源分享平台之一。我们致力于为广大CS1.6玩家提供高质量的游戏资源，包括地图、模型、插件、皮肤等。
+                    </p>
+                    <p class="text-gray-300 mb-6">
+                        我们的团队由一群热爱CS1.6的玩家组成，拥有丰富的游戏经验和资源制作能力。我们不断收集、整理和制作各类CS1.6资源，为玩家提供更好的游戏体验。
+                    </p>
+                    <p class="text-gray-300 mb-8">
+                        如果你有任何问题或建议，欢迎联系我们。我们将竭诚为你服务！
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-secondary hover:bg-cs-blue transition-colors w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="bg-secondary hover:bg-cs-blue transition-colors w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                        <a href="#" class="bg-secondary hover:bg-cs-blue transition-colors w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative" data-aos="fade-left">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/49a7cbae63e14c6cab9d4791e98db204~tplv-a9rns2rl98-image.image?rcl=20251022230919643B13DEF809A360B4E9&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763737794&x-signature=RTxOEFCDaE9gLs0b9X8O7P5UQcc%3D" alt="CS1.6" class="w-full rounded-lg shadow-2xl">
+                    <div class="absolute -bottom-6 -right-6 bg-cs-green text-black p-4 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold">15年+</h3>
+                        <p>专注CS1.6资源分享</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 订阅区域 -->
+    <section class="py-16 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="bg-primary rounded-xl p-8 md:p-12 text-center" data-aos="fade-up">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">订阅我们的更新</h2>
+                <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+                    订阅我们的邮件列表，获取最新资源和网站动态
+                </p>
+                <div class="flex flex-col md:flex-row justify-center gap-4 max-w-lg mx-auto">
+                    <input type="email" placeholder="输入你的邮箱地址" class="bg-secondary text-white px-4 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-cs-green flex-grow">
+                    <button class="btn-primary px-6 py-3 rounded-full font-medium">
+                        订阅 <i class="fa fa-paper-plane ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-primary pt-16 pb-8 border-t border-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <!-- Logo和简介 -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4a2f01772f304d75b57f51f907f435f5~tplv-a9rns2rl98-image.image?rcl=20251022230919643B13DEF809A360B4E9&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763737788&x-signature=EtBeKrv0cxgZLCt3L8HmfBrXU8k%3D" alt="亡魂CS1.6资源站" class="h-10 w-auto">
+                        <h3 class="text-xl font-bold text-cs-green">亡魂资源站</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        专业的CS1.6资源整合网站，为玩家提供高质量的游戏资源。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-cs-green transition-colors">
+                            <i class="fa fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-cs-green transition-colors">
+                            <i class="fa fa-qq text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-cs-green transition-colors">
+                            <i class="fa fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-cs-green transition-colors">首页</a></li>
+                        <li><a href="#categories" class="text-gray-400 hover:text-cs-green transition-colors">资源分类</a></li>
+                        <li><a href="#popular" class="text-gray-400 hover:text-cs-green transition-colors">热门资源</a></li>
+                        <li><a href="#new" class="text-gray-400 hover:text-cs-green transition-colors">最新上传</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-cs-green transition-colors">关于我们</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 资源分类 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">资源分类</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-cs-green transition-colors">地图</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cs-green transition-colors">武器</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cs-green transition-colors">角色</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cs-green transition-colors">插件</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cs-green transition-colors">音效</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系我们 -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6">联系我们</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-envelope text-cs-green mt-1 mr-3"></i>
+                            <span class="text-gray-400">contact@cs16-resource.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-qq text-cs-green mt-1 mr-3"></i>
+                            <span class="text-gray-400">123456789</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-weixin text-cs-green mt-1 mr-3"></i>
+                            <span class="text-gray-400">CS16_Resource</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        &copy; 2025 亡魂的CS1.6资源整合网站. 保留所有权利.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-cs-green transition-colors text-sm">隐私政策</a>
+                        <a href="#" class="text-gray-400 hover:text-cs-green transition-colors text-sm">使用条款</a>
+                        <a href="#" class="text-gray-400 hover:text-cs-green transition-colors text-sm">免责声明</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 资源详情模态框 -->
+    <div id="resource-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <div class="modal-content bg-primary rounded-lg overflow-hidden">
+            <div class="relative">
+                <img id="modal-image" src="https://p3-doubao-search-sign.byteimg.com/labis/44843b9759f11aa8461a242e9e39d33c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=gPyw7uMF%2F65s92S0P9EHFWQQcMo%3D" alt="资源图片" class="w-full h-64 object-cover">
+                <span id="modal-category" class="absolute top-4 right-4 bg-cs-blue px-3 py-1 rounded-full text-sm font-medium">地图</span>
+            </div>
+            <div class="p-6">
+                <h2 id="modal-title" class="text-2xl md:text-3xl font-bold mb-4">镇妖宝塔-灵山古寺</h2>
+                <div class="flex items-center mb-6">
+                    <div class="rating-stars mr-3">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <span class="text-gray-400">4.5 (1,245 评价)</span>
+                    <span class="mx-4 text-gray-700">|</span>
+                    <span class="text-gray-400"><i class="fa fa-download mr-1"></i> 25,678 次下载</span>
+                    <span class="mx-4 text-gray-700">|</span>
+                    <span class="text-gray-400"><i class="fa fa-calendar mr-1"></i> 2025-06-15</span>
+                </div>
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold mb-3">资源描述</h3>
+                    <p id="modal-description" class="text-gray-300">
+                        国风僵尸地图，融合东方元素与恐怖氛围，适合僵尸服使用。地图设计精美，细节丰富，包含多个独特场景和机关。支持多人游戏，适合16-32人同时在线。
+                        <br><br>
+                        地图特点：
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li>精美的东方建筑风格</li>
+                            <li>多个独特的游戏场景</li>
+                            <li>丰富的机关和陷阱</li>
+                            <li>支持多种游戏模式</li>
+                            <li>优化的性能表现</li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-3">资源信息</h3>
+                        <ul class="space-y-2 text-gray-300">
+                            <li class="flex justify-between">
+                                <span>文件大小:</span>
+                                <span>256 MB</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>作者:</span>
+                                <span>国风工作室</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>版本:</span>
+                                <span>1.2</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>更新日期:</span>
+                                <span>2025-06-15</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>兼容游戏:</span>
+                                <span>CS1.6 / CZ</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-3">预览图片</h3>
+                        <div class="grid grid-cols-3 gap-2">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/44843b9759f11aa8461a242e9e39d33c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=gPyw7uMF%2F65s92S0P9EHFWQQcMo%3D" alt="预览图1" class="w-full h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/19baf9ae7bedb19811f8fbbae8ebfece~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=DNDESB%2F03n%2B%2F2ZNhxTQCXHBg3Jk%3D" alt="预览图2" class="w-full h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/6586ae2a21a265c9ac8d9164d118b213~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=c7b%2B11hJn3mWi4CivI%2FJTUGmOmY%3D" alt="预览图3" class="w-full h-20 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex space-x-4 mb-4 md:mb-0">
+                        <button class="btn-secondary px-6 py-3 rounded-full font-medium">
+                            <i class="fa fa-thumbs-up mr-2"></i> 点赞 (1,245)
+                        </button>
+                        <button class="bg-gray-700 hover:bg-gray-600 transition-colors px-6 py-3 rounded-full font-medium">
+                            <i class="fa fa-share-alt mr-2"></i> 分享
+                        </button>
+                    </div>
+                    <button class="btn-primary px-8 py-3 rounded-full font-bold text-lg">
+                        <i class="fa fa-download mr-2"></i> 立即下载
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化AOS动画库
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // 移动端菜单切换
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 资源详情模态框
+            const modal = document.getElementById('resource-modal');
+            const closeBtn = document.querySelector('.close-btn');
+            const viewResourceBtns = document.querySelectorAll('.view-resource');
+            
+            // 打开模态框
+            viewResourceBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden'; // 防止背景滚动
+                });
+            });
+            
+            // 关闭模态框
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto'; // 恢复背景滚动
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // 资源筛选按钮
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'bg-cs-green', 'text-black');
+                        b.classList.add('bg-gray-700');
+                    });
+                    
+                    // 添加当前按钮的active类
+                    this.classList.add('active', 'bg-cs-green', 'text-black');
+                    this.classList.remove('bg-gray-700');
+                    
+                    // 这里可以添加实际的筛选逻辑
+                });
+            });
+            
+            // 导航链接高亮
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // 移除所有链接的active类
+                    navLinks.forEach(l => {
+                        l.classList.remove('active-nav');
+                    });
+                    
+                    // 添加当前链接的active类
+                    this.classList.add('active-nav');
+                });
+            });
+            
+            // 搜索功能
+            const searchBox = document.querySelector('.search-box input');
+            const searchBtn = document.querySelector('.search-box button');
+            
+            searchBtn.addEventListener('click', function() {
+                performSearch();
+            });
+            
+            searchBox.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const searchTerm = searchBox.value.trim();
+                if (searchTerm) {
+                    alert('搜索: ' + searchTerm);
+                    // 这里可以添加实际的搜索逻辑
+                }
+            }
+            
+            // 模拟资源数据
+            const resources = [
+                {
+                    id: 1,
+                    title: '镇妖宝塔-灵山古寺',
+                    category: '地图',
+                    image: 'https://p3-doubao-search-sign.byteimg.com/labis/44843b9759f11aa8461a242e9e39d33c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=gPyw7uMF%2F65s92S0P9EHFWQQcMo%3D',
+                    rating: 4.5,
+                    reviews: 1245,
+                    downloads: 25678,
+                    date: '2025-06-15',
+                    description: '国风僵尸地图，融合东方元素与恐怖氛围，适合僵尸服使用。地图设计精美，细节丰富，包含多个独特场景和机关。支持多人游戏，适合16-32人同时在线。'
+                },
+                {
+                    id: 2,
+                    title: 'CSGO风格武器包',
+                    category: '武器',
+                    image: 'https://p11-doubao-search-sign.byteimg.com/labis/ca96fee9e909b69271316a9c49ec5350~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=Aml46ZYQcM0d3CWwltXbmkfj6CY%3D',
+                    rating: 4.0,
+                    reviews: 987,
+                    downloads: 19432,
+                    date: '2025-06-10',
+                    description: '将CSGO的武器模型和纹理移植到CS1.6，让经典游戏焕发新生。包含全部主流武器，细节精美，手感出色。'
+                },
+                {
+                    id: 3,
+                    title: '性感魔女Hestia',
+                    category: '角色',
+                    image: 'https://p3-doubao-search-sign.byteimg.com/labis/cf5745442649b636dc7304f00565ca72~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776697771&x-signature=e9oZUWQPK%2FDJF4YNBkkk94ODUNA%3D',
+                    rating: 4.7,
+                    reviews: 1562,
+                    downloads: 32145,
+                    date: '2025-06-05',
+                    description: '自制角色MOD，性感魔女Hestia替换原有角色模型，细节精美，动作流畅。支持CT和T阵营选择。'
+                }
+            ];
+            
+            // 为每个"查看详情"按钮添加点击事件
+            document.querySelectorAll('.view-resource').forEach((btn, index) => {
+                btn.addEventListener('click', function() {
+                    const resource = resources[index % resources.length];
+                    
+                    // 更新模态框内容
+                    document.getElementById('modal-title').textContent = resource.title;
+                    document.getElementById('modal-image').src = resource.image;
+                    document.getElementById('modal-category').textContent = resource.category;
+                    document.getElementById('modal-description').textContent = resource.description;
+                    
+                    // 根据分类设置不同的颜色
+                    const categoryBadge = document.getElementById('modal-category');
+                    categoryBadge.className = 'absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium';
+                    
+                    if (resource.category === '地图') {
+                        categoryBadge.classList.add('bg-cs-blue');
+                    } else if (resource.category === '武器') {
+                        categoryBadge.classList.add('bg-cs-red');
+                    } else if (resource.category === '角色') {
+                        categoryBadge.classList.add('bg-cs-green');
+                    } else {
+                        categoryBadge.classList.add('bg-gray-500');
+                    }
+                    
+                    // 显示模态框
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
